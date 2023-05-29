@@ -407,10 +407,10 @@
                 </list>
               </option>
               <option name="name" value="SgLink" />
-              <option name="preName" value="" />
+              <option name="preName" value="sg_" />
               <option name="saveModelName" value="easyblog-framework" />
               <option name="savePackageName" value="" />
-              <option name="savePath" value="./easyblog-framework/src/main/java/com/xq/domain" />
+              <option name="savePath" value="./easyblog-framework/src/main/java/com/xq" />
               <option name="templateGroupName" value="MybatisPlus" />
             </TableInfoDTO>
           </value>

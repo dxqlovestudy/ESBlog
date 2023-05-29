@@ -16,4 +16,9 @@ public class SystemConstants {
      * 类别状态正常
      */
     public static final String STATUS_NORMAL = "0";
+
+    /**
+     * 0代表着友链审核通过
+     */
+    public static final String LINK_STATUS_NORMAL = "0";
 }
