@@ -864,11 +864,11 @@
                 </list>
               </option>
               <option name="name" value="SysUser" />
-              <option name="preName" value="" />
+              <option name="preName" value="sys_" />
               <option name="saveModelName" value="easyblog-framework" />
               <option name="savePackageName" value="" />
               <option name="savePath" value="./easyblog-framework/src/main/java/com/xq/domain" />
-              <option name="templateGroupName" value="" />
+              <option name="templateGroupName" value="MybatisPlus" />
             </TableInfoDTO>
           </value>
         </entry>

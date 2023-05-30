@@ -14,7 +14,7 @@ public class LinkController {
     @Autowired
     private LinkService linkService;
 
-    @GetMapping("getAllLink")
+    @GetMapping("/getAllLink")
     public ResponseResult getAllLink() {
         return linkService.getAllLink();
     }
