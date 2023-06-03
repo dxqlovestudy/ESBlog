@@ -19,3 +19,9 @@ mybatis-plus:
       logic-delete-value: 1
       logic-not-delete-value: 0
       id-type: auto
+
+oss:
+  endpoint: https://oss-cn-hangzhou.aliyuncs.com
+  accessKeyId: LTAI5tMqesBV9AQW3W7xkzKa
+  accessKeySecret: xLhAnBpYgwQ8Ee6wl6qRTiZOlx7hBO
+  bucketName: picturebed-dxq
