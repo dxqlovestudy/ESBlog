@@ -21,4 +21,10 @@ public class SystemConstants {
      * 0代表着友链审核通过
      */
     public static final String LINK_STATUS_NORMAL = "0";
+
+    /**
+     * 1代表着是友链评论.0代表着为文章评论
+     */
+    public static final String ARTICLE_COMMENT = "0";
+    public static final String LINK_COMMENT = "1";
 }
