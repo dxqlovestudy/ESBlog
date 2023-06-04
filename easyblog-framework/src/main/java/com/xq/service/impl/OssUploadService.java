@@ -7,7 +7,10 @@ import com.aliyun.oss.OSSException;
 import com.aliyun.oss.model.PutObjectRequest;
 import com.aliyun.oss.model.PutObjectResult;
 import com.xq.domain.ResponseResult;
+import com.xq.enums.AppHttpCodeEnum;
+import com.xq.exception.SystemException;
 import com.xq.service.UploadService;
+import com.xq.utils.PathUtils;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
@@ -25,12 +28,18 @@ public class OssUploadService implements UploadService {
     @Override
     public ResponseResult uploadImg(MultipartFile img) {
         //TODO 判断文件类型或者文件大小
+        // 获取原始文件名
+        String originalFilename = img.getOriginalFilename();
 
+
+        // 对原始文件名进行判断
+        if (!originalFilename.endsWith(".png") && !originalFilename.endsWith((".jpg"))&& !originalFilename.endsWith((".jpeg"))) {
+            throw new SystemException(AppHttpCodeEnum.FILE_TYPE_ERROR);
+        }
 
         // 如果判断通过，则上传文件到oss中
-        String url = upLoadOss(img);
-
-
+        String filePath = PathUtils.generateFilePath(originalFilename);
+        String url = upLoadOss(img, filePath);
         return ResponseResult.okResult(url);
     }
 
@@ -40,7 +49,7 @@ public class OssUploadService implements UploadService {
     private String bucketName;
 
 
-    private String upLoadOss(MultipartFile imgFile) {
+    private String upLoadOss(MultipartFile imgFile, String filePath) {
         // Endpoint以华东1（杭州）为例，其它Region请按实际情况填写。
 //        String endpoint = "https://oss-cn-hangzhou.aliyuncs.com";
         // 阿里云账号AccessKey拥有所有API的访问权限，风险很高。强烈建议您创建并使用RAM用户进行API访问或日常运维，请登录RAM控制台创建RAM用户。
@@ -49,7 +58,8 @@ public class OssUploadService implements UploadService {
         // 填写Bucket名称，例如examplebucket。
 //        String bucketName = "picturebed-dxq";
         // 填写Object完整路径，完整路径中不能包含Bucket名称，例如exampledir/exampleobject.txt。
-        String objectName = "blog-images/avatar/test/1683726933926.jpeg";
+//        String objectName = "blog-images/avatar/test/1683726933926.jpeg";
+        String objectName = filePath;
         // 填写本地文件的完整路径，例如D:\\localpath\\examplefile.txt。
         // 如果未指定本地路径，则默认从示例程序所属项目对应本地路径中上传文件流。
 //        String filePath= "C:\\Users\\Administrator\\Desktop\\1683726933926.jpeg";
@@ -64,7 +74,7 @@ public class OssUploadService implements UploadService {
             PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, objectName, inputStream);
             // 创建PutObject请求。
             PutObjectResult result = ossClient.putObject(putObjectRequest);
-            return "sss";
+            return "https://picturebed-dxq.oss-cn-hangzhou.aliyuncs.com/" + objectName;
         } catch (OSSException oe) {
             System.out.println("Caught an OSSException, which means your request made it to OSS, "
                     + "but was rejected with an error response for some reason.");

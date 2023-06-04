@@ -14,5 +14,9 @@ import com.xq.domain.entity.User;
 public interface UserService extends IService<User> {
 
     ResponseResult getuserInfo();
+
+    ResponseResult updateUserInfo(User user);
+
+    ResponseResult register(User user);
 }
 

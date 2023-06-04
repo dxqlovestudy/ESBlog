@@ -27,4 +27,6 @@ public class SystemConstants {
      */
     public static final String ARTICLE_COMMENT = "0";
     public static final String LINK_COMMENT = "1";
+
+    public static final String REDIS_ARTICLE_COUNT = "article:viewCount";
 }
