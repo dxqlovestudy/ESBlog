@@ -22,6 +22,6 @@ mybatis-plus:
 
 oss:
   endpoint: https://oss-cn-hangzhou.aliyuncs.com
-  accessKeyId: your-accessKeyId
-  accessKeySecret: your-accessKeySecret
+  accessKeyId: LTAI5tMqesBV9AQW3W7xkzKa
+  accessKeySecret: xLhAnBpYgwQ8Ee6wl6qRTiZOlx7hBO
   bucketName: picturebed-dxq
