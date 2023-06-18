@@ -1,5 +1,6 @@
 package com.xq.config;
 
+
 import com.xq.filter.JwtAuthenticationTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -40,12 +41,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 // 对于登录接口 允许匿名访问
-                .antMatchers("/login").anonymous()
-//                .antMatchers("/logout").authenticated()
-                .antMatchers("/user/userInfo").authenticated()
+                .antMatchers("/user/login").anonymous()
+                .antMatchers("/logout").authenticated()
+//                .antMatchers("/user/userInfo").authenticated()
 //                .antMatchers("/upload").authenticated()
                 // 除上面外的所有请求全部不需要认证即可访问
-                .anyRequest().permitAll();
+                .anyRequest().authenticated();
 
         //配置异常处理器
         http.exceptionHandling()
@@ -64,4 +65,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
+
+    /*@Bean
+    public static AuthenticationEntryPoint authenticationEntryPoint() {
+        return new AuthenticationEntryPointImpl();
+    }*/
 }

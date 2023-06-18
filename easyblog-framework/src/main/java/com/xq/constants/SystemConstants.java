@@ -29,4 +29,14 @@ public class SystemConstants {
     public static final String LINK_COMMENT = "1";
 
     public static final String REDIS_ARTICLE_COUNT = "article:viewCount";
+
+    /**
+     *
+     */
+    public static final String MENU = "M";
+    public static final String BUTTON = "B";
+
+    /** 正常状态 */
+    public static final String NORMAL = "0";
+
 }

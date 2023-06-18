@@ -7,6 +7,7 @@ import com.xq.domain.entity.Article;
 import com.xq.domain.entity.Category;
 import com.xq.domain.ResponseResult;
 import com.xq.domain.vo.CategoryVo;
+import com.xq.domain.vo.TagVo;
 import com.xq.mapper.CategoryMapper;
 import com.xq.service.ArticleService;
 import com.xq.service.CategoryService;
@@ -44,6 +45,15 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         List<CategoryVo> categoryVos = BeanCopyUtils.copyBeanList(categories, CategoryVo.class);
 
         return ResponseResult.okResult(categoryVos);
+    }
+
+    @Override
+    public List<CategoryVo> listAllCategory() {
+        LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper();
+        queryWrapper.eq(Category::getStatus, SystemConstants.NORMAL);
+        List<Category> list = list(queryWrapper);
+        List<CategoryVo> categoryVos = BeanCopyUtils.copyBeanList(list, CategoryVo.class);
+        return categoryVos;
     }
 }
 

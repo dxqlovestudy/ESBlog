@@ -6,7 +6,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xq.constants.SystemConstants;
 import com.xq.domain.ResponseResult;
+import com.xq.domain.dto.AddArticleDto;
 import com.xq.domain.entity.Article;
+import com.xq.domain.entity.ArticleTag;
 import com.xq.domain.entity.Category;
 import com.xq.domain.vo.ArticleDetailVo;
 import com.xq.domain.vo.ArticleListVo;
@@ -14,6 +16,7 @@ import com.xq.domain.vo.HotArticleVo;
 import com.xq.domain.vo.PageVo;
 import com.xq.mapper.ArticleMapper;
 import com.xq.service.ArticleService;
+import com.xq.service.ArticleTagService;
 import com.xq.service.CategoryService;
 import com.xq.utils.BeanCopyUtils;
 import com.xq.utils.RedisCache;
@@ -31,6 +34,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     private CategoryService categoryService;
     @Autowired
     RedisCache redisCache;
+    @Autowired
+    ArticleTagService articleTagService;
 
     @Override
     public ResponseResult hotArticleList() {
@@ -113,6 +118,21 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     public ResponseResult updateViewCount(Long id) {
         // 更新redis中对应id的浏览量
         redisCache.incrementCacheMapValue(SystemConstants.REDIS_ARTICLE_COUNT, id.toString(), 1);
+        return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult addArticle(AddArticleDto articleDto) {
+        // 添加博客
+        Article article = BeanCopyUtils.copyBean(articleDto, Article.class);
+        save(article);
+
+        //添加博客和标签的关联
+        List<ArticleTag> articleTags = articleDto.getTags().stream()
+                .map(tagId -> new ArticleTag(article.getId(), tagId))
+                .collect(Collectors.toList());
+        articleTagService.saveBatch(articleTags);
+
         return ResponseResult.okResult();
     }
 }
