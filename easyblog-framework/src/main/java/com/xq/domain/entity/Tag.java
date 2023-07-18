@@ -28,14 +28,14 @@ public class Tag  {
 
     //标签名
     private String name;
-    
+
+    @TableField(value = "create_by", fill = FieldFill.INSERT)
     private Long createBy;
 
     @TableField(value = "create_time", fill = FieldFill.INSERT)
     private Date createTime;
-    
+    @TableField(value = "update_by", fill = FieldFill.INSERT_UPDATE)
     private Long updateBy;
-
     @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
     //删除标志（0代表未删除，1代表已删除）
