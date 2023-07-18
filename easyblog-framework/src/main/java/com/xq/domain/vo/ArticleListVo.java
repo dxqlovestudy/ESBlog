@@ -27,6 +27,4 @@ public class ArticleListVo {
     private Long viewCount;
 
     private Date createTime;
-
-
 }

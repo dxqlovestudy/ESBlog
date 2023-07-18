@@ -44,7 +44,7 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
     @Override
     public ResponseResult addFlag(Tag tag) {
         getBaseMapper().insert(tag);
-        return null;
+        return ResponseResult.okResult();
     }
 
     @Override
