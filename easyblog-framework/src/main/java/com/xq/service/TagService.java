@@ -24,5 +24,11 @@ public interface TagService extends IService<Tag> {
     ResponseResult addFlag(Tag tag);
 
     List<TagVo> listAllTag();
+
+    ResponseResult deleteTagByIds(List<Long> idList);
+
+    ResponseResult getTagById(long tagId);
+
+    ResponseResult putTag(Tag tag);
 }
 

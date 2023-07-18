@@ -1,6 +1,7 @@
 package com.xq.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xq.domain.ResponseResult;
@@ -11,6 +12,7 @@ import com.xq.domain.vo.TagVo;
 import com.xq.mapper.TagMapper;
 import com.xq.service.TagService;
 import com.xq.utils.BeanCopyUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -52,6 +54,29 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
         List<Tag> tagLists = list();
         List<TagVo> tagVos = BeanCopyUtils.copyBeanList(tagLists, TagVo.class);
         return tagVos;
+    }
+
+    @Override
+    public ResponseResult deleteTagByIds(List<Long> idList) {
+        getBaseMapper().deleteBatchIds(idList);
+        return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult getTagById(long tagId) {
+        Tag tag = getBaseMapper().selectById(tagId);
+        TagVo tagVo = BeanCopyUtils.copyBean(tag, TagVo.class);
+        return ResponseResult.okResult(tagVo);
+    }
+
+    @Override
+    public ResponseResult putTag(Tag tag) {
+        UpdateWrapper<Tag> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("id", tag.getId());
+        updateWrapper.set("name", tag.getName());
+        updateWrapper.set("remark", tag.getRemark());
+        getBaseMapper().update(tag, updateWrapper);
+        return ResponseResult.okResult();
     }
 }
 

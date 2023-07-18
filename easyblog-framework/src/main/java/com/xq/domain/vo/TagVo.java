@@ -12,4 +12,6 @@ public class TagVo {
 
     //标签名
     private String name;
+    //备注
+    private String remark;
 }
