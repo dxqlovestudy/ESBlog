@@ -48,25 +48,12 @@ public class OssUploadService implements UploadService {
 
 
     private String upLoadOss(MultipartFile imgFile, String filePath) {
-        // Endpoint以华东1（杭州）为例，其它Region请按实际情况填写。
-//        String endpoint = "https://oss-cn-hangzhou.aliyuncs.com";
-        // 阿里云账号AccessKey拥有所有API的访问权限，风险很高。强烈建议您创建并使用RAM用户进行API访问或日常运维，请登录RAM控制台创建RAM用户。
-//        String accessKeyId = "LTAI5tMqesBV9AQW3W7xkzKa";
-//        String accessKeySecret = "xLhAnBpYgwQ8Ee6wl6qRTiZOlx7hBO";
-        // 填写Bucket名称，例如examplebucket。
-//        String bucketName = "picturebed-dxq";
-        // 填写Object完整路径，完整路径中不能包含Bucket名称，例如exampledir/exampleobject.txt。
-//        String objectName = "blog-images/avatar/test/1683726933926.jpeg";
         String objectName = filePath;
-        // 填写本地文件的完整路径，例如D:\\localpath\\examplefile.txt。
-        // 如果未指定本地路径，则默认从示例程序所属项目对应本地路径中上传文件流。
-//        String filePath= "C:\\Users\\Administrator\\Desktop\\1683726933926.jpeg";
 
         // 创建OSSClient实例。
         OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
 
         try {
-//            InputStream inputStream = new FileInputStream(filePath);
             InputStream inputStream = imgFile.getInputStream();
             // 创建PutObjectRequest对象。
             PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, objectName, inputStream);
