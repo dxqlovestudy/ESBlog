@@ -1,19 +1,22 @@
 package com.xq.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xq.constants.SystemConstants;
+import com.xq.domain.dto.CategoryListDto;
 import com.xq.domain.entity.Article;
 import com.xq.domain.entity.Category;
 import com.xq.domain.ResponseResult;
 import com.xq.domain.vo.CategoryVo;
-import com.xq.domain.vo.TagVo;
+import com.xq.domain.vo.PageVo;
 import com.xq.mapper.CategoryMapper;
 import com.xq.service.ArticleService;
 import com.xq.service.CategoryService;
 import com.xq.utils.BeanCopyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Set;
@@ -54,6 +57,17 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         List<Category> list = list(queryWrapper);
         List<CategoryVo> categoryVos = BeanCopyUtils.copyBeanList(list, CategoryVo.class);
         return categoryVos;
+    }
+
+    @Override
+    public ResponseResult<PageVo> pageCategoryList(Integer pageNum, Integer pageSize, CategoryListDto categoryListDto) {
+        LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(StringUtils.hasText(categoryListDto.getName()), Category::getName, categoryListDto.getName());
+        queryWrapper.eq(StringUtils.hasText(categoryListDto.getStatus()), Category::getStatus, categoryListDto.getStatus());
+        Page<Category> page = new Page<>(pageNum, pageSize);
+        page(page, queryWrapper);
+        PageVo pageVo = new PageVo(page.getRecords(), page.getTotal());
+        return ResponseResult.okResult(pageVo);
     }
 }
 

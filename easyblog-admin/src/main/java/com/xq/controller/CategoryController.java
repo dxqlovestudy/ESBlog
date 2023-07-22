@@ -1,8 +1,10 @@
 package com.xq.controller;
 
 import com.xq.domain.ResponseResult;
+import com.xq.domain.dto.CategoryListDto;
 import com.xq.domain.entity.Tag;
 import com.xq.domain.vo.CategoryVo;
+import com.xq.domain.vo.PageVo;
 import com.xq.domain.vo.TagVo;
 import com.xq.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,11 @@ public class CategoryController {
     public ResponseResult listAllCategory() {
         List<CategoryVo> list = categoryService.listAllCategory();
         return ResponseResult.okResult(list);
+    }
+
+    @GetMapping("list")
+    public ResponseResult<PageVo> listCategoryPage(Integer pageNum, Integer pageSize, CategoryListDto categoryListDto) {
+        return categoryService.pageCategoryList(pageNum, pageSize, categoryListDto);
     }
 
 
