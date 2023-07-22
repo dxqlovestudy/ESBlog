@@ -11,7 +11,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryListDto {
+public class CategoryDto {
     private Long id;
     //分类名
     private String name;

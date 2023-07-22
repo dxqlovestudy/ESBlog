@@ -4,12 +4,13 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xq.constants.SystemConstants;
-import com.xq.domain.dto.CategoryListDto;
+import com.xq.domain.dto.CategoryDto;
 import com.xq.domain.entity.Article;
 import com.xq.domain.entity.Category;
 import com.xq.domain.ResponseResult;
 import com.xq.domain.vo.CategoryVo;
 import com.xq.domain.vo.PageVo;
+import com.xq.enums.AppHttpCodeEnum;
 import com.xq.mapper.CategoryMapper;
 import com.xq.service.ArticleService;
 import com.xq.service.CategoryService;
@@ -27,6 +28,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
     @Autowired
     private ArticleService articleService;
+    @Autowired
+    private CategoryMapper categoryMapper;
 
     @Override
     public ResponseResult getCategoryList() {
@@ -60,14 +63,34 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     }
 
     @Override
-    public ResponseResult<PageVo> pageCategoryList(Integer pageNum, Integer pageSize, CategoryListDto categoryListDto) {
+    public ResponseResult<PageVo> pageCategoryList(Integer pageNum, Integer pageSize, CategoryDto categoryDto) {
         LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(StringUtils.hasText(categoryListDto.getName()), Category::getName, categoryListDto.getName());
-        queryWrapper.eq(StringUtils.hasText(categoryListDto.getStatus()), Category::getStatus, categoryListDto.getStatus());
+        queryWrapper.eq(StringUtils.hasText(categoryDto.getName()), Category::getName, categoryDto.getName());
+        queryWrapper.eq(StringUtils.hasText(categoryDto.getStatus()), Category::getStatus, categoryDto.getStatus());
         Page<Category> page = new Page<>(pageNum, pageSize);
         page(page, queryWrapper);
         PageVo pageVo = new PageVo(page.getRecords(), page.getTotal());
         return ResponseResult.okResult(pageVo);
+    }
+
+    @Override
+    public ResponseResult addCategory(CategoryDto categoryDto) {
+        String categoryName = categoryDto.getName();
+        Category existingCategory = findByCategoryName(categoryName);
+        if (existingCategory != null) {
+            existingCategory.setDescription(categoryDto.getDescription());
+            existingCategory.setStatus(categoryDto.getStatus());
+            getBaseMapper().updateById(existingCategory);
+        } else {
+            Category category = BeanCopyUtils.copyBean(categoryDto, Category.class);
+            getBaseMapper().insert(category);
+        }
+        return ResponseResult.okResult();
+    }
+    private Category findByCategoryName(String categoryName) {
+        LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Category::getName,categoryName);
+        return categoryMapper.selectOne(queryWrapper);
     }
 }
 

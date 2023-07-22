@@ -1,17 +1,13 @@
 package com.xq.controller;
 
 import com.xq.domain.ResponseResult;
-import com.xq.domain.dto.CategoryListDto;
-import com.xq.domain.entity.Tag;
+import com.xq.domain.dto.CategoryDto;
+import com.xq.domain.entity.Category;
 import com.xq.domain.vo.CategoryVo;
 import com.xq.domain.vo.PageVo;
-import com.xq.domain.vo.TagVo;
 import com.xq.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,8 +24,12 @@ public class CategoryController {
     }
 
     @GetMapping("list")
-    public ResponseResult<PageVo> listCategoryPage(Integer pageNum, Integer pageSize, CategoryListDto categoryListDto) {
-        return categoryService.pageCategoryList(pageNum, pageSize, categoryListDto);
+    public ResponseResult<PageVo> listCategoryPage(Integer pageNum, Integer pageSize, CategoryDto categoryDto) {
+        return categoryService.pageCategoryList(pageNum, pageSize, categoryDto);
+    }
+    @PostMapping()
+    public ResponseResult addCategory(@RequestBody CategoryDto category) {
+        return categoryService.addCategory(category);
     }
 
 

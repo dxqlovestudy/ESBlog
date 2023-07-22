@@ -27,8 +27,6 @@ import java.io.InputStream;
 public class OssUploadService implements UploadService {
     @Override
     public ResponseResult uploadImg(MultipartFile img) {
-        //TODO 判断文件类型或者文件大小
-        // 获取原始文件名
         String originalFilename = img.getOriginalFilename();
 
 
