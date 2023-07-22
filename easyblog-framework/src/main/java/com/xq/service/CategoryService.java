@@ -18,4 +18,10 @@ public interface CategoryService extends IService<Category> {
     ResponseResult<PageVo> pageCategoryList(Integer pageNum, Integer pageSize, CategoryDto categoryDto);
 
     ResponseResult addCategory(CategoryDto category);
+
+    ResponseResult getCategoryById(long categoryId);
+
+    ResponseResult addCategoryById(CategoryDto categoryDto);
+
+    ResponseResult delectCategoryByIds(List<Long> idList);
 }

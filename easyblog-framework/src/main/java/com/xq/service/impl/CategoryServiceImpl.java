@@ -10,7 +10,7 @@ import com.xq.domain.entity.Category;
 import com.xq.domain.ResponseResult;
 import com.xq.domain.vo.CategoryVo;
 import com.xq.domain.vo.PageVo;
-import com.xq.enums.AppHttpCodeEnum;
+import com.xq.domain.vo.ReviceCategoryVo;
 import com.xq.mapper.CategoryMapper;
 import com.xq.service.ArticleService;
 import com.xq.service.CategoryService;
@@ -87,6 +87,27 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         }
         return ResponseResult.okResult();
     }
+
+    @Override
+    public ResponseResult getCategoryById(long categoryId) {
+        Category category = getBaseMapper().selectById(categoryId);
+        ReviceCategoryVo reviceCategoryVo = BeanCopyUtils.copyBean(category, ReviceCategoryVo.class);
+        return ResponseResult.okResult(reviceCategoryVo);
+    }
+
+    @Override
+    public ResponseResult addCategoryById(CategoryDto categoryDto) {
+        Category category = BeanCopyUtils.copyBean(categoryDto, Category.class);
+        getBaseMapper().updateById(category);
+        return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult delectCategoryByIds(List<Long> idList) {
+        getBaseMapper().deleteBatchIds(idList);
+        return ResponseResult.okResult();
+    }
+
     private Category findByCategoryName(String categoryName) {
         LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Category::getName,categoryName);
