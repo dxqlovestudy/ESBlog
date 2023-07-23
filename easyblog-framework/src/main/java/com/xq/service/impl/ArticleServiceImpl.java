@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xq.constants.SystemConstants;
 import com.xq.domain.ResponseResult;
 import com.xq.domain.dto.AddArticleDto;
+import com.xq.domain.dto.ListArticleDto;
 import com.xq.domain.entity.Article;
 import com.xq.domain.entity.ArticleTag;
 import com.xq.domain.entity.Category;
@@ -22,6 +23,7 @@ import com.xq.utils.BeanCopyUtils;
 import com.xq.utils.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -134,5 +136,28 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         articleTagService.saveBatch(articleTags);
 
         return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult<PageVo> listArticle(Integer pageNum, Integer pageSize, ListArticleDto listArticleDto) {
+        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(StringUtils.hasText(listArticleDto.getTitle()), Article::getTitle, listArticleDto.getTitle());
+        queryWrapper.like(StringUtils.hasText(listArticleDto.getSummary()), Article::getSummary, listArticleDto.getSummary());
+        Page<Article> page = new Page(pageNum, pageSize);
+        page(page, queryWrapper);
+        PageVo pageVo = new PageVo(page.getRecords(), page.getTotal());
+        return ResponseResult.okResult(pageVo);
+    }
+
+    @Override
+    public ResponseResult deleteArticleByIds(List<Long> articleIds) {
+        getBaseMapper().deleteBatchIds(articleIds);
+        return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult getArticleById(Long articleId) {
+        Article article = getBaseMapper().selectById(articleId);
+        return ResponseResult.okResult(article);
     }
 }
