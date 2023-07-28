@@ -160,4 +160,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         Article article = getBaseMapper().selectById(articleId);
         return ResponseResult.okResult(article);
     }
+
+    @Override
+    public ResponseResult putArticleById(AddArticleDto addArticleDto) {
+        Article article = BeanCopyUtils.copyBean(addArticleDto, Article.class);
+        getBaseMapper().updateById(article);
+        return ResponseResult.okResult();
+    }
 }
