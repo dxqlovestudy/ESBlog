@@ -3,6 +3,7 @@ package com.xq.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xq.constants.SystemConstants;
 import com.xq.domain.ResponseResult;
 import com.xq.domain.dto.AddRoleDto;
 import com.xq.domain.dto.ChangeRoleStatusDto;
@@ -31,6 +32,8 @@ import java.util.List;
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements RoleService {
     @Autowired
     RoleMenuService roleMenuService;
+    @Autowired
+    RoleService roleService;
 
     @Override
     public List<String> selectRoleKeyByUserId(Long id) {
@@ -94,5 +97,13 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     public ResponseResult deleteRoleById(List<Long> roleIds) {
         getBaseMapper().deleteBatchIds(roleIds);
         return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult listAllRole() {
+        LambdaQueryWrapper<Role> queryWrapper = new LambdaQueryWrapper();
+        queryWrapper.eq(Role::getStatus, SystemConstants.STATUS_NORMAL);
+        List<Role> roleList = roleService.list(queryWrapper);
+        return ResponseResult.okResult(roleList);
     }
 }

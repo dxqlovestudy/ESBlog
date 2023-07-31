@@ -28,6 +28,9 @@ public interface RoleService extends IService<Role> {
 
     ResponseResult getRoleById(Long menuId);
 
+
     ResponseResult deleteRoleById(List<Long> roleIds);
+
+    ResponseResult listAllRole();
 }
 
