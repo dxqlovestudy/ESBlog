@@ -2,6 +2,7 @@ package com.xq.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.xq.domain.entity.Menu;
+import com.xq.domain.vo.MenuTreeVo;
 
 import java.util.List;
 
@@ -18,5 +19,9 @@ public interface MenuMapper extends BaseMapper<Menu> {
     List<Menu> selectAllRouterMenu();
 
     List<Menu> selectRouterMenuTreeByUserId(Long userId);
+
+    List<MenuTreeVo> selectALLMenuTreeVo();
+
+    List<MenuTreeVo> selectMenuTreeVoByUserId(Long userId);
 }
 

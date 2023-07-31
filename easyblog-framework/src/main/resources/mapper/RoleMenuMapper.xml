@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xq.mapper.RoleMenuMapper">
+
+    <select id="selectALLMenuIds" resultType="java.lang.String">
+        SELECT DISTINCT menu_id
+        FROM sys_role_menu
+        ORDER BY menu_id
+    </select>
+    <select id="selectRoleRelateMenuIds" resultType="java.lang.String">
+        SELECT DISTINCT rm.menu_id
+        FROM sys_role_menu rm
+        WHERE rm.role_id = #{roleId}
+        ORDER BY rm.menu_id
+    </select>
+    <select id="selectALLMenuTreeVo" resultType="com.xq.domain.vo.MenuTreeVo">
+        SELECT m.id,
+            m.menu_name as label,
+            m.parent_id
+        FROM sys_menu m
+        WHERE m.`status` = 0
+          AND m.del_flag = 0
+        ORDER BY m.parent_id, m.order_num
+    </select>
+    <select id="selectMenuTreeVoByRoleId" resultType="com.xq.domain.vo.MenuTreeVo">
+        SELECT m.id,
+               m.menu_name as label,
+               m.parent_id
+        FROM sys_role_menu rm
+                 LEFT JOIN sys_menu m ON rm.menu_id = m.id
+        WHERE rm.role_id = #{roleId}
+          AND m.`status` = 0
+          AND m.del_flag = 0
+        ORDER BY m.parent_id, m.order_num
+    </select>
+</mapper>

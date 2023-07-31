@@ -26,7 +26,6 @@ import java.util.List;
 public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> implements CommentService {
     @Autowired
     private UserService userService;
-
     /**
      *
      * @param commentType 评论类型，分为文章评论和友链评论

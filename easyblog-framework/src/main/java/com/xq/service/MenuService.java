@@ -30,5 +30,9 @@ public interface MenuService extends IService<Menu> {
     ResponseResult getMenuById(Long menuId);
 
     ResponseResult putMenu(AddMenuDto addMenuDto);
+
+    ResponseResult treeSelectMenu();
+
+    ResponseResult treeSelectMenuById(long roleId);
 }
 

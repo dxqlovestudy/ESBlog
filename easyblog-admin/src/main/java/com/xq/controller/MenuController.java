@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController()
 @RequestMapping("/system/menu")
-public class SystemController {
+public class MenuController {
     @Autowired
     MenuService menuService;
     @GetMapping("/list")
@@ -27,11 +27,20 @@ public class SystemController {
     }
     @GetMapping("{id}")
     public ResponseResult getMenuById(@PathVariable("id") String id) {
-        Long menuId = Long.parseLong(id);
-        return menuService.getMenuById(menuId);
+        Long roleId = Long.parseLong(id);
+        return menuService.getMenuById(roleId);
     }
     @PutMapping()
     public ResponseResult putMenu(@RequestBody AddMenuDto addMenuDto) {
         return menuService.putMenu(addMenuDto);
+    }
+    @GetMapping("/treeselect")
+    public ResponseResult treeSelectMenu() {
+        return menuService.treeSelectMenu();
+    }
+    @GetMapping("/roleMenuTreeselect/{id}")
+    public ResponseResult treeSelectMenuById(@PathVariable("id") String id) {
+        long menuId = Long.parseLong(id);
+        return menuService.treeSelectMenuById(menuId);
     }
 }

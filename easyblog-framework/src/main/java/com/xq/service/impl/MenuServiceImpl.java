@@ -9,12 +9,16 @@ import com.xq.domain.dto.AddMenuDto;
 import com.xq.domain.dto.MenuListDto;
 import com.xq.domain.entity.Menu;
 import com.xq.domain.vo.MenuListVo;
+import com.xq.domain.vo.MenuTreeVo;
 import com.xq.domain.vo.MenuVo;
+import com.xq.domain.vo.RoleMenuTreeVo;
 import com.xq.enums.AppHttpCodeEnum;
 import com.xq.mapper.MenuMapper;
+import com.xq.mapper.RoleMenuMapper;
 import com.xq.service.MenuService;
 import com.xq.utils.BeanCopyUtils;
 import com.xq.utils.SecurityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -30,7 +34,10 @@ import java.util.stream.Collectors;
  */
 @Service("menuService")
 public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements MenuService {
-
+    @Autowired
+    private MenuMapper menuMapper;
+    @Autowired
+    private RoleMenuMapper roleMenuMapper;
     @Override
     public List<String> selectPermsByUserId(Long id) {
         // 判断是否是管理员 如果是管理员返回集合中只需要admin
@@ -42,9 +49,6 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
             List<String> perms = menus.stream().map(Menu::getPerms)
                     .collect(Collectors.toList());
             return perms;
-            /*List<String> roleKeys = new ArrayList<>();
-            roleKeys.add("admin");
-            return roleKeys;*/
         }
         // 这里应该使用的是baseMapper的方法，不是重写的方法
         return getBaseMapper().selectPermsByUserId(id);
@@ -52,15 +56,14 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     @Override
     public List<Menu> selectRouterMenuTreeByUserId(Long userId) {
-        MenuMapper menuMapper = getBaseMapper();
         List<Menu> menus = null;
         // 判断是否是管理员
         if (SecurityUtils.isAdmin()) {
             // 如果是 返回所有符合要求的Menu
-            menus = menuMapper.selectAllRouterMenu();
+            menus = getBaseMapper().selectAllRouterMenu();
         } else {
             // 否则 获取用户所具有的Menu
-            menus = menuMapper.selectRouterMenuTreeByUserId(userId);
+            menus = getBaseMapper().selectRouterMenuTreeByUserId(userId);
         }
         // 构建tree结构，子父结构
         // 先找出第一层菜单，再找出他们的子菜单，设置到children属性中
@@ -120,12 +123,53 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         }
     }
 
+    @Override
+    public ResponseResult treeSelectMenu() {
+        Long userId = SecurityUtils.getUserId();
+        List<MenuTreeVo> menuTreeVos;
+        if (userId == 1L) {
+            menuTreeVos = menuMapper.selectALLMenuTreeVo();
+        } else {
+            menuTreeVos = menuMapper.selectMenuTreeVoByUserId(userId);
+        }
+        List<MenuTreeVo> menuTreeVoList = buildMenuTreeVo(menuTreeVos, 0L);
+        return ResponseResult.okResult(menuTreeVoList);
+    }
+
+    @Override
+    public ResponseResult treeSelectMenuById(long roleId) {
+        List<MenuTreeVo> menuTreeVos;
+        List<String> checkedKeys;
+        if (roleId == 1L) {
+            menuTreeVos = roleMenuMapper.selectALLMenuTreeVo();
+            checkedKeys = roleMenuMapper.selectALLMenuIds();
+        } else {
+            menuTreeVos = roleMenuMapper.selectMenuTreeVoByRoleId(roleId);
+            checkedKeys = roleMenuMapper.selectRoleRelateMenuIds(roleId);
+        }
+        List<MenuTreeVo> menuTreeVoList = buildMenuTreeVo(menuTreeVos, 0L);
+        RoleMenuTreeVo roleMenuTreeVo = new RoleMenuTreeVo(menuTreeVoList, checkedKeys);
+        return ResponseResult.okResult(roleMenuTreeVo);
+    }
+
     private List<Menu> buliderMenuTree(List<Menu> menus, Long parentId) {
         List<Menu> menuTree = menus.stream()
                 .filter(menu -> menu.getParentId().equals(parentId))
                 .map(menu -> menu.setChildren(getChildren(menu, menus)))
                 .collect(Collectors.toList());
         return menuTree;
+    }
+
+    private List<MenuTreeVo> buildMenuTreeVo(List<MenuTreeVo> menuTreeVos, Long parentId) {
+        List<MenuTreeVo> menuTreeVoList = new ArrayList<>();
+        for (int i = 0; i < menuTreeVos.size(); i++) {
+            MenuTreeVo menuTreeVo = menuTreeVos.get(i);
+            if (menuTreeVo.getParentId().equals(parentId)) {
+                menuTreeVo.setChildren(buildMenuTreeVo(menuTreeVos, menuTreeVo.getId()));
+                menuTreeVoList.add(menuTreeVo);
+            }
+        }
+        return menuTreeVoList;
     }
 
     /**
