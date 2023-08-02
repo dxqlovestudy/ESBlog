@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xq.constants.SystemConstants;
 import com.xq.domain.ResponseResult;
 import com.xq.domain.dto.AddLinkDto;
+import com.xq.domain.dto.ChangeLinkStatusDto;
 import com.xq.domain.dto.ListLinkDto;
 import com.xq.domain.entity.Link;
 import com.xq.domain.vo.LinkVo;
@@ -53,6 +54,13 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, Link> implements Li
     @Override
     public ResponseResult deleteLinkByIds(List<Long> linkList) {
         getBaseMapper().deleteBatchIds(linkList);
+        return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult changeLinkStatus(ChangeLinkStatusDto changeLinkStatusDto) {
+        Link link = BeanCopyUtils.copyBean(changeLinkStatusDto, Link.class);
+        updateById(link);
         return ResponseResult.okResult();
     }
 }

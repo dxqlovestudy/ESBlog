@@ -2,6 +2,7 @@ package com.xq.controller;
 
 import com.xq.domain.ResponseResult;
 import com.xq.domain.dto.AddLinkDto;
+import com.xq.domain.dto.ChangeLinkStatusDto;
 import com.xq.domain.dto.ListLinkDto;
 import com.xq.domain.vo.PageVo;
 import com.xq.service.LinkService;
@@ -41,6 +42,18 @@ public class LinkController {
                 .map(Long::parseLong)
                 .collect(Collectors.toList());
         return linkService.deleteLinkByIds(linkList);
+    }
+
+    @PutMapping("/changeLinkStatus")
+    public ResponseResult changeLinkStatus(@RequestBody ChangeLinkStatusDto changeLinkStatusDto) {
+        /**
+         * @description: 内容管理-标签管理-操作：审核通过和审核不通过接口
+         * @param changeLinkStatusDto
+         * @return com.xq.domain.ResponseResult
+         * @author: HuaXian
+         * @date: 2023/8/2 16:01
+         */
+        return linkService.changeLinkStatus(changeLinkStatusDto);
     }
 
 }
